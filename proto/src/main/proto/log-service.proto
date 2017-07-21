@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_outer_classname = "LogService";
+
+package com.vorxsoft.ieye.proto;
+
+enum VSLogLevel {
+    VSLogLevelTrace = 0;
+    VSLogLevelDebug=1;
+    VSLogLevelInfo=2;
+    VSLogLevelWarning=3;
+    VSLogLevelError=4;
+    VSLogLevelFatal=5;
+}
+
+enum VSLogType {
+    //事件日志,标记为EV
+    VSLogTypeEvent = 0;
+    //所有监控点事件源日志，标记为ME
+    VSLogTypeMonitorSrcEvent = 1;
+    //开关量事件源日志，标记为SI
+    VSLogTypeDigitalIOSrcEvent=2;
+    //设备事件源日志，标记为DEV
+    VSLogTypeDeviceSrcEvent=3;
+    //服务器事件源日志，标记为SEV
+    VSLogTypeServerSrcEvent=4;
+    //联动日志，标记为LIN
+    VSLogTypeLinkage=5;
+    //用户登录日志，标记为UL
+    VSLogTypeUserLogin = 6;
+    //管理日志，管理员对系统的任意更新操作日志，操作类型可以是添加、删除、更新等。
+    VSLogTypeManage = 7;
+    VSLogTypeManageAdd =701;
+    VSLogTypeManageDel = 702;
+    VSLogTypeManageMod = 703;
+    VSLogTypeManageReboot = 704;
+    VSLogTypeManageStart=705;
+    VSLogTypeManageStop=706;
+    //操作日志,记录操作员对系统的所有操作。操作类型可以是电视墙切换、实时视频点播、ptz控制、录像查询等。由日志服务负责入库。
+    VSLogTypeOperator = 8;
+    VSLogTypeOperatorLiveVideoView = 801;
+    VSLogTypeOperatorVwallSwitch =802;
+    VSLogTypeOperatorPtz=803;
+    VSLogTypeOperatorRecSearch=804;
+    VSLogTypeOperatorRecPlay=805;
+    VSLogTypeOperatorRecDownload=806;
+    VSLogTypeOperatorTalkBack=807;
+    VSLogTypeOperatorUserLogSearch=808;
+    VSLogTypeOperatorMgrSearch=809;
+    VSLogTypeOperatorSearch=810;
+    VSLogTypeOperatorSvrStateSearch=811;
+    VSLogTypeOperatorDevStateSearch=812;
+    VSLogTypeOperatorResStateSearch=813;
+    //服务器运行日志,记录服务器的运行状态，包含服务器的上下线。
+    VSLogTypeServerStat = 9;
+    VSLogTypeServerStatOnline = 901;
+    VSLogTypeServerStatOffline=902;
+    VSLogTypeServerStatNull=903;
+    //设备运行日志 记录设备的运行状态，包含设备的上下线。
+    VSLogTypeDeviceStat = 10;
+    VSLogTypeDeviceStatOnline=1001;
+    VSLogTypeDeviceStatOffline=1002;
+    VSLogTypeDeviceStatNull=1003;
+    //资源运行日志,记录资源的运行状态，包含资源的上下线。
+    VSLogTypeResourceStat = 11;
+    VSLogTypeResourceStatOnline = 1101;
+    VSLogTypeResourceStatOffline = 1102;
+    VSLogTypeResourceStatNull = 1103;
+    //其他类型日志，标记为OTNull
+    VSLogTypeOther = 12;
+}
+message VSLogRequest{
+    string dateTimeMs = 1;
+    string hostNameIp = 2;
+    uint32 pId = 3;
+    string pName = 4;
+    VSLogLevel logLevel = 5;
+    VSLogType  logType = 6;
+    string businessId =7;
+    oneof logContentof{
+        string logContent = 8;
+        VSLogOperatorContent opContent =9;
+        VSLogServerStatContent serContent = 10;
+        VSLogDeviceStatContent devContent = 11;
+        VSLogResourceStatContent resContent = 12;
+    }
+    //string logContent=8;
+}
+
+message MultiVSLogRequest{
+    repeated VSLogRequest multiVSLogRequest = 1;
+}
+
+message VSLogResponse{
+     string businessId=1;
+     int32 result=2;
+     //bool result=2；
+}
+
+message MultiVSLogResponse{
+    repeated VSLogResponse multiVSLogResponse = 1;
+}
+
+message VSLogOperatorContent{
+    string userName = 1;
+    string nickName = 2;
+    string logDescription = 3;
+    int32  resoureId = 4;
+    string resourceName = 5 ;
+}
+
+message VSLogServerStatContent{
+    int32 serverId = 1;
+    string serverName = 2;
+    int32 groupId = 3;
+    string groupName = 4;
+    string startTime = 5;
+    string endTime = 6;
+}
+
+message VSLogDeviceStatContent{
+    int32 deviceId = 1;
+    string deviceName = 2;
+    int32 groupId = 3;
+    string groupName = 4;
+    string startTime = 5;
+    string endTime = 6;
+}
+
+message VSLogResourceStatContent{
+    int32 resourceId = 1;
+    string resourceName = 2;
+    int32 groupId = 3;
+    string groupName = 4;
+    string startTime = 5;
+    string endTime = 6;
+}
+
+service VSLogService {
+    //request or response must be message
+    rpc SentVSLog(VSLogRequest) returns(VSLogResponse);
+    rpc SentMultiVSLog(MultiVSLogRequest) returns(MultiVSLogResponse);
+}
