@@ -1,0 +1,222 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_outer_classname = "EventService";
+
+package com.vorxsoft.ieye.proto;
+
+enum VSEventType {
+    VSEventTypeNull = 0;
+    VSEventTypeMonitor = 1;
+    //移动侦测	event_motion_detect
+    VSEventTypeMonitorMotionDetect = 101;
+    //视频丢失	event_video_lose
+    VSEventTypeMonitorVideoLose = 102;
+    //视频遮挡	event_video_occlusion
+    VSEventTypeMonitorVideoOcclusion = 103;
+    //人脸抓拍	event_face_snapshot
+    VSEventTypeMonitorFaceSnapshot = 104;
+    //人脸识别	event_face_recognize
+    VSEventTypeMonitorFaceRecognize = 105;
+    //进入区域 event_enter_region
+    VSEventTypeMonitorEnterRegion = 106;
+    //离开区域 event_leave_region
+    VSEventTypeMonitorLeaveRegion = 107;
+    //盗移	event_steal_move
+    VSEventTypeMonitorStealMove = 108;
+    //区域入侵	event_perimeter_alarm
+    VSEventTypeMonitorPerimeterAlarm = 109;
+    //徘徊
+    //人员聚集
+    //穿越警戒面
+    //人员黑名单
+    //快速移动
+    //拥堵（交通）
+    //停车（交通）
+    //逆行（交通）
+    //行人（交通）
+    //抛洒物（交通）
+    //烟雾（交通）
+    //压线（交通）
+    //黑名单数据（交通）
+    //超速（交通）
+    //慢速（交通）
+    //变道（交通）
+    //掉头（交通）
+    //其它（交通）
+    VSEventTypeDigitalIO = 2;
+    //开关量报警（通用类型）	event_siol_common
+    VSEventTypeDigitalIOCommon = 201;
+    //烟雾报警	event_smoke
+    VSEventTypeDigitalIOSmoke = 202;
+    //温度报警	event_temperature
+    VSEventTypeDigitalIOTemperature =  203;
+    //火灾报警	event_fire
+    VSEventTypeDigitalIOFire = 204 ;
+    //燃气报警	event_gas
+    VSEventTypeDigitalIOGas = 205;
+    //红外报警	event_infrared
+    VSEventTypeDigitalIOInfrared = 206;
+    //震动报警	event_vibration
+    VSEventTypeDigitalIOVibration = 207;
+    //漏水报警	event_leakage
+    VSEventTypeDigitalIOLeakage = 208;
+    VSEventTypeIntelligentChannelAlarm = 3;
+
+    VSEventTypeDeviceAlarm = 4;
+    //设备离线	event_dev_offline
+    VSEventTypeDeviceOffline =  401;
+    //硬盘满	event_dev_disk_full
+    VSEventTypeDeviceDiskFull = 402;
+    //硬盘错误	event_dev_disk_err
+    VSEventTypeDeviceDiskErr = 403;
+    //升级失败	event_dev_update_fail
+    VSEventTypeDeviceUpdateFail = 404;
+
+    VSEventTypeServerAlarm = 5;
+    //服务器离线	event_svr_offline
+    VSEventTypeServerOffline= 501;
+    //cpu占用率过高	event_svr_cpu
+    VSEventTypeServerCpu = 502;
+    //内存占用率过高	event_svr_ram
+    VSEventTypeServerRam = 503;
+    //硬盘错误	event_svr_disk_err
+    VSEventTypeServerDiskErr = 504;
+    //硬盘满	event_svr_disk_full
+    VSEventTypeServerDiskFull = 505;
+    //录像错误	event_svr_record_err
+    VSEventTypeServerRecordErr = 506;
+    VSEventTypeEnvironmentMonitor = 6;
+    //扬尘	event_dust
+    VSEventTypeEnvDust = 601;
+    //温度	event_temperature
+    VSEventTypeEnvTemperature = 602;
+    //温度湿度	event_temperature_humidity
+    VSEventTypeEnvTempHumi = 603;
+    //气压	event_pressure
+    VSEventTypeEnvPressure = 604;
+    //风速	event_windspeed
+    VSEventTypeEnvWindspeed = 605;
+    VSEventTypeDeviceMonitor = 7;
+    //塔吊倾角监测器	event_tower_angle_monitor_alarm
+    VSEventTypeDeviceTowerAngleMonitor = 701;
+    //高支模板变形监测器	hightemplate_deform_alarm
+    VSEventTypeDeviceHightemplateDeformAlarm = 702;
+
+    //业务监测类（预留）		work_monitor
+    VSEventTypeWorkMonitor = 8;
+    //工作超时	work_overtime_alarm
+    VSEventTypeWorkOverTime =  801;
+    //人工录入类（预留）		manual_record
+    VSEventTypeManualInput = 9;
+	//施工	construction_event
+    VSEventTypeManualInputConstruction = 901;
+	//拥堵	traffic_jam_event
+    VSEventTypeManualInputTrafficJam = 902;
+	//塌方	landslide_event
+    VSEventTypeManualInputLandslide = 903;
+}
+
+enum VSGuardPlanType{
+   VSGuardPlanTypePermanent=0;
+    VSGuardPlanTypeTemporary=1;
+}
+
+enum VSEventAlarmLevel {
+    VSEventAlarmLevelFetal = 0;
+    VSEventAlarmLevelHigh=1;
+    VSEventAlarmLevelMinor=2;
+    VSEventAlarmLevelInfo=3;
+}
+message VSEventContactsInfo{
+    int32 contactId = 1;
+    string name = 2;
+    string email = 3;
+    string phoneNumber = 4;
+    string cellPhoneNumber = 5;
+}
+
+message VSEventStomInfo{
+    int32 stormId = 1;
+    VSEventType eventType = 2;
+    int32 eventStormInterval=3;
+}
+
+message VSEventGuardPlanInfo{
+    int32 guardPlanId=1;
+    string guardPlanName=2;
+    string timeSchedule=3;
+    VSGuardPlanType guardPlayType = 4;
+    string startTime = 5;
+    string endTime = 6;
+}
+
+message VSEventInfo{
+    int32 eventId=1;
+    string eventNumber=2;
+    VSEventType evenType=3;
+    string eventName=4;
+    string eventDesc=5;
+    bool eventStatus=6;
+    VSEventAlarmLevel eventAlarmLevel = 7;
+    bool eventLinkage=8;
+    int32 autoReleaseInterval=9;
+    int32 guardPlanId=10;
+}
+
+enum VSLinkageType{
+    VSLinkageTypeClient=0;
+    VSLinkageTypeWall=1;
+    VSLinkageTypePreset=2;
+    VSLinkageTypeCruise=3;
+    VSLinkageTypeSio=4;
+    VSLinkageTypeRecord=5;
+    VSLinkageTypeSms=6;
+    VSLinkageTypeSnapshot=7;
+    LinkageTypeEmail=8;
+}
+
+message VSEventLinkageInfo{
+    int32 linkageId=1;
+    int32 eventId=2;
+    VSLinkageType linkageType=3;
+    repeated string linkageArgs = 4;
+}
+
+message VSEventLinkActionRequest{
+    VSEventInfo eventinfo=1;
+    VSEventLinkageInfo   eventLinkageInfo=2;
+}
+
+message VSEventLinkActionResponse{
+    int32 eventId=1;
+    int32 linkageId=2;
+    bool result=3;
+}
+message VSEventRequest{
+    VSEventInfo eventInfo=1;
+}
+message VSEventResponse{
+    int32 eventId=1;
+    bool result=2;
+}
+message VSDistributeConfigRequest{
+    VSEventInfo eventinfo=1;
+    VSEventLinkageInfo   eventLinkageInfo=2;
+}
+message VSDistributeConfigResponse{
+    int32 eventId=1;
+    bool result=2;
+}
+
+
+service VSEventService {
+    //request or response must be message
+    rpc SentEvent(VSEventRequest) returns(VSEventResponse);
+
+    //send event link action from event service to cms service
+    rpc SendEventLinkAction(VSEventLinkActionRequest)returns(VSEventLinkActionResponse);
+
+    //Distribute Configuration from web to event service
+    rpc DistributeConfig(VSDistributeConfigRequest)returns(VSDistributeConfigResponse);
+}
