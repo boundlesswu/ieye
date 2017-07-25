@@ -154,7 +154,7 @@ message VSEventGuardPlanInfo{
 message VSEventInfo{
     int32 eventId=1;
     string eventNumber=2;
-    VSEventType evenType=3;
+    VSEventType eventType=3;
     string eventName=4;
     string eventDesc=5;
     bool eventStatus=6;
@@ -194,11 +194,18 @@ message VSEventLinkActionResponse{
     bool result=3;
 }
 message VSEventRequest{
-    VSEventInfo eventInfo=1;
+    //VSEventInfo eventInfo=1;
+    VSEventType evenType = 1;
+    string deviceNo = 2;
+    string resourceUid = 3;
+    string happenTime = 4;
+
 }
 message VSEventResponse{
-    int32 eventId=1;
-    bool result=2;
+    //int32 eventId=1;
+    string deviceNo = 1;
+    string resourceUid = 2;
+    bool result = 3;
 }
 message VSDistributeConfigRequest{
     VSEventInfo eventinfo=1;
