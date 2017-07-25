@@ -15,6 +15,7 @@
     <modules>
         <module>proto</module>
         <module>logservice</module>
+        <module>eventservice</module>
     </modules>
 
 

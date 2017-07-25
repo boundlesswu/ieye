@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="eventservice" />
         <module name="logservice" />
         <module name="proto" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="eventservice" target="1.5" />
       <module name="ieye" target="1.5" />
       <module name="logservice" target="1.5" />
       <module name="proto" target="1.5" />

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 
 
-
 public class SimpleLogClientStart {
 
     public static final String allChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
