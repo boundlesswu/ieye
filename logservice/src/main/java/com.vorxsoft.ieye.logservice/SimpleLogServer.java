@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.charset.Charset;
+
 
 public class SimpleLogServer extends VSLogServiceGrpc.VSLogServiceImplBase
 {
@@ -185,7 +187,9 @@ public class SimpleLogServer extends VSLogServiceGrpc.VSLogServiceImplBase
         tmpstring += request.getBusinessId() + "|";
         switch(request.getLogContentofCase()){
             case LOGCONTENT:
-                tmpstring += request.getLogContent();
+                //tmpstring += request.getLogContent();
+                //tmpstring += request.getLogContentBytes().toStringUtf8();
+                tmpstring += request.getLogContentBytes().toStringUtf8();;
                 break;
             case OPCONTENT:
                 tmpstring += request.getOpContent().getUserName()+","
