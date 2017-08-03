@@ -36,7 +36,7 @@ public class SimpleLogServerStart {
         final SimpleLogServerStart simpleServerStart = new SimpleLogServerStart();
         SimpleLogServer.getLogger().entry();
         simpleServerStart.start();
-        TimeUnit.SECONDS.sleep(3600*24);
+        TimeUnit.DAYS.sleep(365*2000);
         SimpleLogServer.getLogger().exit();
     }
 
