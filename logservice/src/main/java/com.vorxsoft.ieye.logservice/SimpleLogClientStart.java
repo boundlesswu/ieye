@@ -7,6 +7,7 @@ import static com.vorxsoft.ieye.proto.VSLogType.*;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.text.SimpleDateFormat;
@@ -111,6 +112,11 @@ public class SimpleLogClientStart {
         }
         return sb.toString();
     }
+    private  String generateGBK() throws UnsupportedEncodingException {
+         String str = "我们abbab";
+        String str2 = new String(str.getBytes("utf-8"),"utf-8");
+        return str2;
+    }
 
     private VSLogOperatorContent getAOPContent()
     {
@@ -135,7 +141,7 @@ public class SimpleLogClientStart {
         return logServerContent;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
 
         SimpleLogClientStart simpleLogClient  = new SimpleLogClientStart();
         simpleLogClient.createChannel();
@@ -154,6 +160,18 @@ public class SimpleLogClientStart {
                     setLogContent(simpleLogClient.generateMixString(25)).
                     build());
             System.out.println("response:" + vsLogResponse.getResult());
+
+            VSLogResponse vsLogResponse4 = simpleLogServiceStub.sentVSLog(VSLogRequest.newBuilder().
+                    setDateTimeMs(simpleLogClient.getDateTimeNs()).
+                    setHostNameIp(simpleLogClient.getHostNameIp()).
+                    setPId(getProcessID()).
+                    setPName(SimpleLogClientStart.class.getName()).
+                    setLogLevel(simpleLogClient.getLogLevel()).
+                    setLogType(simpleLogClient.getLogType()).
+                    setBusinessId(simpleLogClient.getBusinessId()).
+                    setLogContent(simpleLogClient.generateGBK()).
+                    build());
+            System.out.println("response:" + vsLogResponse4.getResult());
 
 
             VSLogResponse vsLogResponse2 = simpleLogServiceStub.sentVSLog(VSLogRequest.newBuilder().
