@@ -7,6 +7,9 @@ public interface MicroService {
     ROUND, RANDOM,PERFORMANCE;
   }
   public void init(String endpoint) throws Exception;
+  public void init(WatchCallerInterface wc) throws Exception;
+  public void init(String endpoint,WatchCallerInterface wc) throws Exception;
+  public void init()throws Exception;
   public MicroServiceImpl getInstance();
   public long LeaseGrant(int ttl) throws Exception;
   public int Registe(String name,String host,int port) throws Exception;
@@ -23,5 +26,4 @@ public interface MicroService {
   public void SetMame(String name);
   public void SetHost(String host);
   public void SetPort(int port);
-  public void init();
 }

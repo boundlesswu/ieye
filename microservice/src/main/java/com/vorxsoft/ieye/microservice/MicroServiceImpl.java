@@ -14,6 +14,9 @@ import java.util.concurrent.*;
 
 import static com.vorxsoft.ieye.microservice.MicroService.PoliceType.RANDOM;
 
+/**
+ * The type Micro service.
+ */
 public class MicroServiceImpl implements  MicroService {
   private final String microServicePath = "/service";
   private final String version = "4.0.0.1";
@@ -30,6 +33,17 @@ public class MicroServiceImpl implements  MicroService {
   private ScheduledExecutorService executor_;
   private Random random = new Random();
 
+  public WatchCallerInterface wc_;
+
+  public void SetWatchCaller(WatchCallerInterface wc)
+  {
+    this.wc_= wc;
+  }
+
+  public void Watchcall(Watch.Watcher watch){
+    this.wc_.WatchCaller(watch);
+  }
+
   MicroServiceImpl(){
     name_ = "";
     host_ = "";
@@ -38,8 +52,9 @@ public class MicroServiceImpl implements  MicroService {
     kvClient_ =  null;
     leaseClient_ = null;
     watchClient_ = null;
-    endpoint_ = "";
+    endpoint_ = "http://192.168.20.251:2379";
     executor_ = Executors.newScheduledThreadPool(3);
+    wc_ = null;
   }
 
   private ScheduledExecutorService getExecutor(){
@@ -49,9 +64,24 @@ public class MicroServiceImpl implements  MicroService {
   @Override
   public void init(String endpoint) throws Exception{
     endpoint_ = endpoint;
+    init();
+  }
+  @Override
+  public void init(WatchCallerInterface wc) throws Exception{
+    SetWatchCaller(wc);
+    init();
+  }
+  @Override
+  public void init(String endpoint,WatchCallerInterface wc) throws Exception{
+    endpoint_ = endpoint;
+    SetWatchCaller(wc);
+    init();
+  }
+  @Override
+  public void init() throws Exception {
     if(!endpoint_.isEmpty()){
       try {
-        client_ = ClientBuilder.newBuilder().setEndpoints(endpoint).build();
+        client_ = ClientBuilder.newBuilder().setEndpoints(endpoint_).build();
       }catch (Exception e){
         System.out.println(e);
       }
@@ -154,10 +184,11 @@ public class MicroServiceImpl implements  MicroService {
   }
   @Override
   public String Resolve(String name, PoliceType policy) throws Exception {
+    //String skey = microServicePath+"/"+name+"/";
     ByteSequence bkey  = ByteSequence.fromString(GetServiceNameFullKey(name));
     GetOption option = GetOption.newBuilder()
-        .withSortField(GetOption.SortTarget.KEY)
-        .withSortOrder(GetOption.SortOrder.DESCEND)
+        //.withSortField(GetOption.SortTarget.KEY)
+        //.withSortOrder(GetOption.SortOrder.DESCEND)
         .withPrefix(bkey)
         .build();
     GetResponse response =  kvClient_.get(bkey,option).get();
@@ -179,7 +210,7 @@ public class MicroServiceImpl implements  MicroService {
     }
     String serviceAddress =  response.getKvs().get(i).getKey().toStringUtf8();
     int pos = serviceAddress.lastIndexOf("/");
-    if(pos >= 0 ) return serviceAddress.substring(pos);
+    if(pos >= 0 ) return serviceAddress.substring(pos+1);
     return null;
   }
 
@@ -192,11 +223,13 @@ public class MicroServiceImpl implements  MicroService {
   @Override
   public String SetWatcher(String name,PoliceType policy) throws Exception {
     address_ = Resolve(name,policy);
+    System.out.println("address is "+ address_);
+    if(address_ == null) {return null;};
     String key = microServicePath+"/"+ name +"/"+address_;
     Watch.Watcher mywatch  =  watchClient_.watch(ByteSequence.fromString(key));
     getExecutor().scheduleAtFixedRate(()->{
-      //WatchResponse wreply  = mywatch.listen();
-      System.out.println("watcher response  " + mywatch.listen());
+      //System.out.println("watcher response  " + mywatch.listen());
+      Watchcall(mywatch);
     },1l,4l, TimeUnit.SECONDS);
     return address_;
   }
@@ -214,11 +247,6 @@ public class MicroServiceImpl implements  MicroService {
   @Override
   public void SetPort(int port){
     port_ = port;
-  }
-
-  @Override
-  public void init() {
-
   }
 
 }
