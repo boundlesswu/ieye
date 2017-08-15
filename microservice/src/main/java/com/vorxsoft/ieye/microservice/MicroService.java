@@ -1,5 +1,6 @@
 package com.vorxsoft.ieye.microservice;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface MicroService {
@@ -19,6 +20,7 @@ public interface MicroService {
   public long RegisteWithHB(String name,String host,int port,int ttl,String value) throws Exception;
   public long RegisteWithHB(String name,String host,int port,int ttl) throws Exception;
   public int UnRegiste(String name,String host,int port) throws Exception;
+  public List<com.coreos.jetcd.data.KeyValue> ResolveAll(String name) throws Exception;
   public String Resolve(String name) throws Exception;
   public String Resolve(String name,PoliceType policy) throws Exception;
   public String SetWatcher(String name)throws Exception;;

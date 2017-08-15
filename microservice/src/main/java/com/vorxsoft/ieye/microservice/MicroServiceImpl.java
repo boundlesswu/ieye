@@ -8,7 +8,7 @@ import com.coreos.jetcd.kv.PutResponse;
 import com.coreos.jetcd.options.GetOption;
 import com.coreos.jetcd.options.PutOption;
 
-import java.security.spec.ECField;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 
@@ -173,6 +173,23 @@ public class MicroServiceImpl implements  MicroService {
     }
     return 0;
   }
+
+  @Override
+  public List<com.coreos.jetcd.data.KeyValue> ResolveAll(String name) throws Exception {
+    String skey = microServicePath+"/"+name+"/";
+    ByteSequence bkey  = ByteSequence.fromString(GetServiceNameFullKey(name));
+    GetOption option = GetOption.newBuilder()
+        .withSortField(GetOption.SortTarget.KEY)
+        .withSortOrder(GetOption.SortOrder.DESCEND)
+        .withPrefix(bkey)
+        .build();
+    GetResponse response =  kvClient_.get(bkey,option).get();
+    if(response.getCount() == 0)
+      return null;
+    else
+      return response.getKvs();
+  }
+
   @Override
   public String Resolve(String name) throws Exception {
     PoliceType policy = RANDOM;
@@ -184,11 +201,11 @@ public class MicroServiceImpl implements  MicroService {
   }
   @Override
   public String Resolve(String name, PoliceType policy) throws Exception {
-    //String skey = microServicePath+"/"+name+"/";
+    String skey = microServicePath+"/"+name+"/";
     ByteSequence bkey  = ByteSequence.fromString(GetServiceNameFullKey(name));
     GetOption option = GetOption.newBuilder()
-        //.withSortField(GetOption.SortTarget.KEY)
-        //.withSortOrder(GetOption.SortOrder.DESCEND)
+        .withSortField(GetOption.SortTarget.KEY)
+        .withSortOrder(GetOption.SortOrder.DESCEND)
         .withPrefix(bkey)
         .build();
     GetResponse response =  kvClient_.get(bkey,option).get();
