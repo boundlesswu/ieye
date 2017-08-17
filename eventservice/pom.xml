@@ -19,9 +19,7 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.0.0</version>
+            <version>${grpc.version}</version>
         </dependency>
     </dependencies>
-
-
 </project>
