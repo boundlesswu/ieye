@@ -44,7 +44,7 @@ public class MicroServiceImpl implements  MicroService {
     this.wc_.WatchCaller(watch);
   }
 
-  MicroServiceImpl(){
+  public MicroServiceImpl(){
     name_ = "";
     host_ = "";
     port_ = 0;
