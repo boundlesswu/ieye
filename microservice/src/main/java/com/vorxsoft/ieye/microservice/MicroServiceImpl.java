@@ -7,6 +7,7 @@ import com.coreos.jetcd.kv.GetResponse;
 import com.coreos.jetcd.kv.PutResponse;
 import com.coreos.jetcd.options.GetOption;
 import com.coreos.jetcd.options.PutOption;
+import com.coreos.jetcd.options.WatchOption;
 
 import java.util.List;
 import java.util.Random;
@@ -241,9 +242,18 @@ public class MicroServiceImpl implements  MicroService {
   public String SetWatcher(String name,PoliceType policy) throws Exception {
     address_ = Resolve(name,policy);
     System.out.println("address is "+ address_);
-    if(address_ == null) {return null;};
-    String key = microServicePath+"/"+ name +"/"+address_;
-    Watch.Watcher mywatch  =  watchClient_.watch(ByteSequence.fromString(key));
+    //if(address_ == null) {return null;};
+    String key;
+    WatchOption woption;
+    if(address_ == null) {
+      key = microServicePath + "/" + name;
+      woption = WatchOption.newBuilder().withPrefix(ByteSequence.fromString(key)).build();
+    }
+    else{
+      key = microServicePath+"/"+ name +"/"+address_;
+      woption = WatchOption.DEFAULT;
+    }
+    Watch.Watcher mywatch  =  watchClient_.watch(ByteSequence.fromString(key),woption);
     getExecutor().scheduleAtFixedRate(()->{
       //System.out.println("watcher response  " + mywatch.listen());
       Watchcall(mywatch);
