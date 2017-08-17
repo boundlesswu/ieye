@@ -32,7 +32,7 @@ public class MicroServiceTest implements WatchCallerInterface{
 //   }
     String name2 = "vag2";
     myservice.RegisteWithHB(name2,"192.168.1.1",88888,10);
-    myservice.SetWatcher("abcdefg");
+    myservice.SetWatcher("Vag",true);
   }
 
 }
