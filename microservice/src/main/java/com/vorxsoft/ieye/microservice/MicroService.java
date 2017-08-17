@@ -23,8 +23,9 @@ public interface MicroService {
   public List<com.coreos.jetcd.data.KeyValue> ResolveAll(String name) throws Exception;
   public String Resolve(String name) throws Exception;
   public String Resolve(String name,PoliceType policy) throws Exception;
-  public String SetWatcher(String name)throws Exception;;
-  public String SetWatcher(String name,PoliceType policy)throws Exception;;
+  public String SetWatcher(String name)throws Exception;
+  public void SetWatcher(String name,boolean isPrefix) throws Exception;
+  public String SetWatcher(String name,PoliceType policy)throws Exception;
   public void SetMame(String name);
   public void SetHost(String host);
   public void SetPort(int port);

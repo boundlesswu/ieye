@@ -239,10 +239,34 @@ public class MicroServiceImpl implements  MicroService {
   }
 
   @Override
+  public void SetWatcher(String name, boolean isPrefix) throws Exception {
+    String key;
+    WatchOption woption;
+    if(isPrefix) {
+      key = microServicePath + "/" + name;
+      woption = WatchOption.newBuilder().withPrefix(ByteSequence.fromString(key)).build();
+    }
+    else{
+      address_ = Resolve(name);
+      if(address_ == null){
+        key = microServicePath + "/" + name;
+      }else{
+        key = microServicePath+"/"+ name +"/"+address_;
+      }
+      woption = WatchOption.DEFAULT;
+    }
+    Watch.Watcher mywatch  =  watchClient_.watch(ByteSequence.fromString(key),woption);
+    getExecutor().scheduleAtFixedRate(()->{
+      //System.out.println("watcher response  " + mywatch.listen());
+      Watchcall(mywatch);
+    },1l,4l, TimeUnit.SECONDS);
+    return;
+  }
+
+  @Override
   public String SetWatcher(String name,PoliceType policy) throws Exception {
     address_ = Resolve(name,policy);
     System.out.println("address is "+ address_);
-    //if(address_ == null) {return null;};
     String key;
     WatchOption woption;
     if(address_ == null) {
