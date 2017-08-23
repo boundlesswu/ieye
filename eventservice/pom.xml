@@ -12,6 +12,11 @@
     <artifactId>event-service</artifactId>
     <dependencies>
         <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.vorxsoft</groupId>
             <artifactId>proto</artifactId>
             <version>4.0.0.1</version>
@@ -20,6 +25,11 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
             <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vorxsoft</groupId>
+            <artifactId>micro-service</artifactId>
+            <version>4.0.0.1</version>
         </dependency>
     </dependencies>
 </project>

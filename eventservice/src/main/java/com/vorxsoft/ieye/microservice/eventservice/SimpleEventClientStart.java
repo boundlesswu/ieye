@@ -1,6 +1,5 @@
-package com.vorxsoft.ieye.eventservice;
+package com.vorxsoft.ieye.microservice.eventservice;
 
-import com.sun.org.apache.bcel.internal.util.ByteSequence;
 import com.vorxsoft.ieye.proto.VSEventRequest;
 import com.vorxsoft.ieye.proto.VSEventResponse;
 import com.vorxsoft.ieye.proto.VSEventServiceGrpc;

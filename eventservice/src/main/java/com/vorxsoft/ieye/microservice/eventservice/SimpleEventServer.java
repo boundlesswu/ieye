@@ -1,12 +1,11 @@
-package com.vorxsoft.ieye.eventservice;
+package com.vorxsoft.ieye.microservice.eventservice;
 
 import com.vorxsoft.ieye.proto.VSEventRequest;
 import com.vorxsoft.ieye.proto.VSEventResponse;
 import com.vorxsoft.ieye.proto.VSEventServiceGrpc;
 
 public class SimpleEventServer extends VSEventServiceGrpc.VSEventServiceImplBase{
-    private get
-    Override
+    @Override
     public void sentEvent(VSEventRequest request,io.grpc.stub.StreamObserver<com.vorxsoft.ieye.proto.VSEventResponse> response){
         String deviceNo = request.getDeviceNo();
         String resourceUid = request.getResourceUid();

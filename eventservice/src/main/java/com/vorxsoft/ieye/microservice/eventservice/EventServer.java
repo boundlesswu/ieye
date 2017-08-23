@@ -1,4 +1,4 @@
-package com.vorxsoft.ieye.eventservice;
+package com.vorxsoft.ieye.microservice.eventservice;
 
 import com.vorxsoft.ieye.proto.VSEventRequest;
 import com.vorxsoft.ieye.proto.VSEventResponse;
