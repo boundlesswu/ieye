@@ -17,6 +17,12 @@ import com.coreos.jetcd.options.GetOption;
 import com.coreos.jetcd.options.LeaseOption;
 import com.coreos.jetcd.options.PutOption;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -31,7 +37,7 @@ public class test {
         return executor;
     }
 
-    test(){
+    test() throws SocketException {
         client = null;
         kvClient = null;
         leaseClient =  null;
@@ -151,6 +157,30 @@ public class test {
         },1l,4l, TimeUnit.SECONDS);
     }
 
+  public List<String> getIPList() throws SocketException {
+    Enumeration allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+    InetAddress ip = null;
+    List<String> a = new ArrayList<String>();
+    String hostip;
+    while (allNetInterfaces.hasMoreElements()) {
+      NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+      System.out.println(netInterface.getName());
+      Enumeration addresses = netInterface.getInetAddresses();
+      while (addresses.hasMoreElements()) {
+        ip = (InetAddress) addresses.nextElement();
+        if (ip != null && ip instanceof Inet4Address) {
+          hostip = ip.getHostAddress();
+          System.out.println("xxxxx IP = " + hostip);
+          if(!hostip.equals("127.0.0.1"))
+            a.add(hostip);
+          //System.out.println("本机的IP = " + ip.getHostAddress());
+        }
+      }
+    }
+    System.out.println("本机的IP = " + a);
+    return a;
+  }
+
     public static void main(String[] args) throws Exception {
         test mytest = new test();
         mytest.setUp();
@@ -158,9 +188,9 @@ public class test {
         int ttl=10;
         long leaseId = mytest.store(key, "mytest123",ttl);
 
-        mytest.leaseKeepAlive(leaseId);
-        mytest.setWatch(key);
-
+        //mytest.leaseKeepAlive(leaseId);
+        //mytest.setWatch(key);
+      mytest.getIPList();
 //        mytest.getExecutor().scheduleAtFixedRate(()->{
 //            try {
 //                mytest.leaseKeepAliveOnce(leaseid);
