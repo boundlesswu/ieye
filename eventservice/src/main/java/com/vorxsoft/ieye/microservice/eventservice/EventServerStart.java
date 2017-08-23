@@ -121,10 +121,10 @@ public class EventServerStart implements WatchCallerInterface {
 
   public static void main(String[] args) throws Exception {
     final EventServerStart simpleServerStart = new EventServerStart();
+    MicroService myservice = new MicroServiceImpl();
+    myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.cfgInit();
     simpleServerStart.start();
-    MicroService myservice = new MicroServiceImpl();
-    myservice.init(registerCenterAddress, new EventServerStart());
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
     TimeUnit.DAYS.sleep(365 * 2000);
   }
