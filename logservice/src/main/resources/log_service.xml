@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<microservice>
+    <info>
+        <name>log</name>
+        <id>1</id>>
+        <hostip>192.168.20.134</hostip>
+        <port>8888</port>
+        <ttl>10</ttl>
+    </info>>
+    <database>
+        <name>postgresql</name>
+        <address>192.168.20.222:2306</address>
+    </database>
+    <registerCenter>
+        <name>etcd</name>
+        <address>http://192.168.20.251:2379</address>
+    </registerCenter>>
+</microservice>
