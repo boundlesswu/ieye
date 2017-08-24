@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <microservice>
     <info>
-        <name>log</name>
+        <name>server_log</name>
         <id>1</id>>
         <hostip>192.168.20.134</hostip>
         <port>8888</port>
