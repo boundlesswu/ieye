@@ -16,5 +16,10 @@
     <registerCenter>
         <name>etcd</name>
         <address>http://192.168.20.251:2379</address>
-    </registerCenter>>
+    </registerCenter>
+    <mq>
+        <name>redis</name>
+        <ip>127.0.0.1</ip>
+        <port>6379</port>
+    </mq>>
 </microservice>
