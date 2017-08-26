@@ -31,7 +31,7 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     private static String serviceName;
     private static String registerCenterName;
     private static String registerCenterAddress = "http://192.168.20.251:2379";
-    final String cfgFile = "C:\\Users\\oe\\workspace\\ieye\\logservice\\src\\main\\resources\\log_service.xml";
+    final String cfgFile = "E:\\.IntelliJIdea\\myproject\\ieye\\logservice\\src\\main\\resources\\log_service.xml";
 
     public void cfgInit() {
         // 解析books.xml文件

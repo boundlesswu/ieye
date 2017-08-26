@@ -30,7 +30,7 @@ public class EventServerStart implements WatchCallerInterface {
   private ScheduledExecutorService executor_;
   public long count = 0;
   public Connection conn=null;
-  public Statement st = null;
+  //public Statement st = null;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
@@ -40,6 +40,7 @@ public class EventServerStart implements WatchCallerInterface {
   private static String dbUrl=null;
   private static String dbUser=null;
   private static String dbPasswd=null;
+  private static String driverClassName=null;
   private static String serviceName;
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
@@ -47,7 +48,7 @@ public class EventServerStart implements WatchCallerInterface {
   private static String mqIP;
   private static int mqPort;
   private Jedis jedis;
-  final String cfgFile = "C:\\Users\\oe\\workspace\\ieye\\eventservice\\src\\main\\resources\\event_service.xml";
+  final String cfgFile = "E:\\.IntelliJIdea\\myproject\\ieye\\eventservice\\src\\main\\resources\\event_service.xml";
 
   private ScheduledExecutorService getExecutor(){
     return  executor_;
@@ -100,6 +101,8 @@ public class EventServerStart implements WatchCallerInterface {
               dbUser = lvalue;
             else if (lname.equals("passwd"))
               dbPasswd = lvalue;
+            else if (lname.equals("driverClassName"))
+              driverClassName = lvalue;
           }
           if (tname.equals("registerCenter")) {
             if (lname.equals("name"))
@@ -123,11 +126,12 @@ public class EventServerStart implements WatchCallerInterface {
       e.printStackTrace();
     }
   }
-  public void dbInit() throws SQLException {
-    dbUrl = "jdbc"+dbname+"://"+dbAddress;
+  public void dbInit() throws SQLException, ClassNotFoundException {
+    dbUrl = "jdbc:"+dbname+"://"+dbAddress;
     System.out.println("db url :" + dbUrl);
+    Class.forName(driverClassName);
     conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
-    st = conn.createStatement();
+    //st = conn.createStatement();
   }
   public void mqInit(){
     jedis  = new  Jedis(mqIP, mqPort);
