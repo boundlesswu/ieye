@@ -13,6 +13,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,8 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     private static String serviceName;
     private static String registerCenterName;
     private static String registerCenterAddress = "http://192.168.20.251:2379";
-    final String cfgFile = "E:\\.IntelliJIdea\\myproject\\ieye\\logservice\\src\\main\\resources\\log_service.xml";
+    //final String cfgFile = "logservice/target/classes/log_service.xml";
+    private InputStream cfgFile = this.getClass().getClassLoader().getResourceAsStream("log_service.xml");
 
     public void cfgInit() {
         // 解析books.xml文件
@@ -39,7 +41,7 @@ public class SimpleLogServerStart implements WatchCallerInterface {
         SAXReader reader = new SAXReader();
         try {
             // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-            Document document = reader.read(new File(cfgFile));
+            Document document = reader.read(cfgFile);
             // 通过document对象获取根节点bookstore
             Element bookStore = document.getRootElement();
             // 通过element对象的elementIterator方法获取迭代器

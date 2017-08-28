@@ -3,18 +3,18 @@
     <info>
         <name>server_log</name>
         <id>1</id>>
-        <hostip>192.168.20.134</hostip>
+        <hostip>192.168.17.151</hostip>
         <port>8888</port>
-        <ttl>10</ttl>
+        <ttl>60</ttl>
     </info>>
     <database>
         <name>postgresql</name>
-        <address>192.168.20.222:5432/vs_ieye</address>
+        <address>192.168.17.151:5432/vs_ieye</address>
         <user>vorx</user>
         <passwd>123456</passwd>
     </database>
     <registerCenter>
         <name>etcd</name>
-        <address>http://192.168.20.251:2379</address>
+        <address>http://192.168.17.151:2379</address>
     </registerCenter>>
 </microservice>

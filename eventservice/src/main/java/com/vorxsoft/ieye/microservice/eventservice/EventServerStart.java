@@ -14,6 +14,7 @@ import org.dom4j.io.SAXReader;
 import redis.clients.jedis.Jedis;
 
 import java.io.File;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,18 +49,20 @@ public class EventServerStart implements WatchCallerInterface {
   private static String mqIP;
   private static int mqPort;
   private Jedis jedis;
-  final String cfgFile = "E:\\.IntelliJIdea\\myproject\\ieye\\eventservice\\src\\main\\resources\\event_service.xml";
-
+  private InputStream cfgFile = this.getClass().getClassLoader().getResourceAsStream("event_service.xml");
   private ScheduledExecutorService getExecutor(){
     return  executor_;
   }
+
   public void cfgInit() {
     // 解析books.xml文件
     // 创建SAXReader的对象reader
     SAXReader reader = new SAXReader();
     try {
+      System.out.println("cfg file is:"+cfgFile);
       // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-      Document document = reader.read(new File(cfgFile));
+           //Document document = reader.read(new File(cfgFile));
+      Document document = reader.read(cfgFile);
       // 通过document对象获取根节点bookstore
       Element bookStore = document.getRootElement();
       // 通过element对象的elementIterator方法获取迭代器
