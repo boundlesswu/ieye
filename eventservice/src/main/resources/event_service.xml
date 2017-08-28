@@ -12,6 +12,7 @@
         <address>192.168.20.222:5432/vs_ieye</address>
         <user>vorx</user>
         <passwd>123456</passwd>
+        <driverClassName>org.postgresql.Driver</driverClassName>
     </database>
     <registerCenter>
         <name>etcd</name>

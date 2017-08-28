@@ -289,9 +289,9 @@ public class EventServerStart implements WatchCallerInterface {
 
   public static void main(String[] args) throws Exception {
     final EventServerStart simpleServerStart = new EventServerStart();
+    simpleServerStart.cfgInit();
     MicroService myservice = new MicroServiceImpl();
     myservice.init(registerCenterAddress, simpleServerStart);
-    simpleServerStart.cfgInit();
     simpleServerStart.start();
     simpleServerStart.dbInit();
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);

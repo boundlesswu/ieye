@@ -117,9 +117,9 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     public static void main(String[] args) throws Exception {
         final SimpleLogServerStart simpleServerStart = new SimpleLogServerStart();
         SimpleLogServer.getLogger().entry();
+        simpleServerStart.cfgInit();
       MicroService myservice = new MicroServiceImpl();
       myservice.init(registerCenterAddress, simpleServerStart);
-      simpleServerStart.cfgInit();
       simpleServerStart.start();
       myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
         TimeUnit.DAYS.sleep(365*2000);
