@@ -14,6 +14,8 @@ import org.dom4j.io.SAXReader;
 import redis.clients.jedis.Jedis;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
@@ -49,14 +51,25 @@ public class EventServerStart implements WatchCallerInterface {
   private static String mqIP;
   private static int mqPort;
   private Jedis jedis;
-  private InputStream cfgFile = this.getClass().getClassLoader().getResourceAsStream("event_service.xml");
+  private InputStream cfgFile;
+  private final  String cfgFileName = "event_service.xml";
   private ScheduledExecutorService getExecutor(){
     return  executor_;
   }
 
-  public void cfgInit() {
+  public void getConfigPath() throws FileNotFoundException {
+    String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
+    System.out.println("tmp:"+tmp);
+    if(tmp.startsWith("jar"))
+      cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+    else
+      cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
+  }
+
+  public void cfgInit() throws FileNotFoundException {
     // 解析books.xml文件
     // 创建SAXReader的对象reader
+    getConfigPath();
     SAXReader reader = new SAXReader();
     try {
       System.out.println("cfg file is:"+cfgFile);

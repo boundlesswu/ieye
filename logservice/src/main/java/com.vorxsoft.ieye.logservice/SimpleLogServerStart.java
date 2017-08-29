@@ -13,6 +13,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -33,9 +35,20 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     private static String registerCenterName;
     private static String registerCenterAddress = "http://192.168.20.251:2379";
     //final String cfgFile = "logservice/target/classes/log_service.xml";
-    private InputStream cfgFile = this.getClass().getClassLoader().getResourceAsStream("log_service.xml");
+    private final  String cfgFileName = "log_service.xml";
+    private InputStream cfgFile;
 
-    public void cfgInit() {
+    public void getConfigPath() throws FileNotFoundException {
+        String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
+        System.out.println("tmp:"+tmp);
+        if(tmp.startsWith("jar"))
+            cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+        else
+            cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
+    }
+
+    public void cfgInit() throws FileNotFoundException {
+        getConfigPath();
         // 解析books.xml文件
         // 创建SAXReader的对象reader
         SAXReader reader = new SAXReader();
