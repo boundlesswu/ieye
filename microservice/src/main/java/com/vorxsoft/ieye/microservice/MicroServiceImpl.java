@@ -150,7 +150,8 @@ public class MicroServiceImpl implements  MicroService {
     getExecutor().scheduleAtFixedRate(()->{
       Lease.KeepAliveListener kal = leaseClient_.keepAlive(leaseID);
       try {
-        System.out.println("keepAlive response  " + kal.listen());
+        kal.listen();
+        //System.out.println("keepAlive response  " + kal.listen());
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
