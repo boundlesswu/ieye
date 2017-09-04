@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +31,7 @@ public class EventServerStart implements WatchCallerInterface {
   public void WatchCaller(Watch.Watcher watch) {
     System.out.println("watcher response  " + watch.listen());
   }
-  private ScheduledExecutorService executor_;
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
   public long count = 0;
   public Connection conn=null;
   //public Statement st = null;
@@ -297,8 +298,12 @@ public class EventServerStart implements WatchCallerInterface {
 
   private void stop() {
     try {
+      jedis.close();
+      conn.close();
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
@@ -311,6 +316,7 @@ public class EventServerStart implements WatchCallerInterface {
     simpleServerStart.start();
     simpleServerStart.dbInit();
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
+    simpleServerStart.travel();
     TimeUnit.DAYS.sleep(365 * 2000);
   }
 }
