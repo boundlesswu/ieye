@@ -26,6 +26,18 @@ enum VSEventType {
     VSEventTypeMonitorStealMove = 108;
     //区域入侵	event_perimeter_alarm
     VSEventTypeMonitorPerimeterAlarm = 109;
+    //高速车辆停驶
+    VSEventTypeMonitorHighwayVehicleStop = 121;
+    //高速行人
+    VSEventTypeMonitorHighwayPedestrian = 122;
+    //高速车辆逆行
+    VSEventTypeMonitorHighwayVehicleRetrograde = 123;
+    //高速车辆缓行
+    VSEventTypeMonitorHighwayVehicleSlowly = 124;
+    //高速公路路况
+    VSEventTypeMonitorHighwayTrafficCondition= 125;
+    //高速公路车流量
+    VSEventTypeMonitorHighwayVehicleFlowrate = 126;
     //徘徊
     //人员聚集
     //穿越警戒面
@@ -119,7 +131,7 @@ enum VSEventType {
 
 enum VSGuardPlanType{
    VSGuardPlanTypePermanent=0;
-    VSGuardPlanTypeTemporary=1;
+   VSGuardPlanTypeTemporary=1;
 }
 
 enum VSEventAlarmLevel {
@@ -199,7 +211,7 @@ message VSEventRequest{
     string deviceNo = 2;
     string resourceUid = 3;
     string happenTime = 4;
-
+    string extraContent = 5;
 }
 message VSEventResponse{
     //int32 eventId=1;
@@ -216,14 +228,17 @@ message VSDistributeConfigResponse{
     bool result=2;
 }
 
-
-service VSEventService {
+service VSEventSentService {
     //request or response must be message
     rpc SentEvent(VSEventRequest) returns(VSEventResponse);
+}
 
-    //send event link action from event service to cms service
-    rpc SendEventLinkAction(VSEventLinkActionRequest)returns(VSEventLinkActionResponse);
-
+service VSEventConfigService{
     //Distribute Configuration from web to event service
     rpc DistributeConfig(VSDistributeConfigRequest)returns(VSDistributeConfigResponse);
+}
+
+service VSEventLinkactionService{
+    //send event link action from event service to cms service
+    rpc SendEventLinkAction(VSEventLinkActionRequest)returns(VSEventLinkActionResponse);
 }
