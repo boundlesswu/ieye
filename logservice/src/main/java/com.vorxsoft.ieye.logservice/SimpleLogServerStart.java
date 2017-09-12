@@ -13,6 +13,9 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,15 +34,27 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     private static String serviceName;
     private static String registerCenterName;
     private static String registerCenterAddress = "http://192.168.20.251:2379";
-    final String cfgFile = "C:\\Users\\oe\\workspace\\ieye\\logservice\\src\\main\\resources\\log_service.xml";
+    //final String cfgFile = "logservice/target/classes/log_service.xml";
+    private final  String cfgFileName = "log_service.xml";
+    private InputStream cfgFile;
 
-    public void cfgInit() {
+    public void getConfigPath() throws FileNotFoundException {
+        String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
+        System.out.println("tmp:"+tmp);
+        if(tmp.startsWith("jar"))
+            cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+        else
+            cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
+    }
+
+    public void cfgInit() throws FileNotFoundException {
+        getConfigPath();
         // 解析books.xml文件
         // 创建SAXReader的对象reader
         SAXReader reader = new SAXReader();
         try {
             // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-            Document document = reader.read(new File(cfgFile));
+            Document document = reader.read(cfgFile);
             // 通过document对象获取根节点bookstore
             Element bookStore = document.getRootElement();
             // 通过element对象的elementIterator方法获取迭代器
@@ -117,9 +132,9 @@ public class SimpleLogServerStart implements WatchCallerInterface {
     public static void main(String[] args) throws Exception {
         final SimpleLogServerStart simpleServerStart = new SimpleLogServerStart();
         SimpleLogServer.getLogger().entry();
+        simpleServerStart.cfgInit();
       MicroService myservice = new MicroServiceImpl();
       myservice.init(registerCenterAddress, simpleServerStart);
-      simpleServerStart.cfgInit();
       simpleServerStart.start();
       myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
         TimeUnit.DAYS.sleep(365*2000);

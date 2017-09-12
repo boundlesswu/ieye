@@ -14,8 +14,12 @@ import org.dom4j.io.SAXReader;
 import redis.clients.jedis.Jedis;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -27,10 +31,10 @@ public class EventServerStart implements WatchCallerInterface {
   public void WatchCaller(Watch.Watcher watch) {
     System.out.println("watcher response  " + watch.listen());
   }
-  private ScheduledExecutorService executor_;
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
   public long count = 0;
   public Connection conn=null;
-  public Statement st = null;
+  //public Statement st = null;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
@@ -40,6 +44,7 @@ public class EventServerStart implements WatchCallerInterface {
   private static String dbUrl=null;
   private static String dbUser=null;
   private static String dbPasswd=null;
+  private static String driverClassName=null;
   private static String serviceName;
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
@@ -47,18 +52,31 @@ public class EventServerStart implements WatchCallerInterface {
   private static String mqIP;
   private static int mqPort;
   private Jedis jedis;
-  final String cfgFile = "C:\\Users\\oe\\workspace\\ieye\\eventservice\\src\\main\\resources\\event_service.xml";
-
+  private InputStream cfgFile;
+  private final  String cfgFileName = "event_service.xml";
   private ScheduledExecutorService getExecutor(){
     return  executor_;
   }
-  public void cfgInit() {
+
+  public void getConfigPath() throws FileNotFoundException {
+    String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
+    System.out.println("tmp:"+tmp);
+    if(tmp.startsWith("jar"))
+      cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+    else
+      cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
+  }
+
+  public void cfgInit() throws FileNotFoundException {
     // 解析books.xml文件
     // 创建SAXReader的对象reader
+    getConfigPath();
     SAXReader reader = new SAXReader();
     try {
+      System.out.println("cfg file is:"+cfgFile);
       // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-      Document document = reader.read(new File(cfgFile));
+           //Document document = reader.read(new File(cfgFile));
+      Document document = reader.read(cfgFile);
       // 通过document对象获取根节点bookstore
       Element bookStore = document.getRootElement();
       // 通过element对象的elementIterator方法获取迭代器
@@ -100,6 +118,8 @@ public class EventServerStart implements WatchCallerInterface {
               dbUser = lvalue;
             else if (lname.equals("passwd"))
               dbPasswd = lvalue;
+            else if (lname.equals("driverClassName"))
+              driverClassName = lvalue;
           }
           if (tname.equals("registerCenter")) {
             if (lname.equals("name"))
@@ -123,11 +143,12 @@ public class EventServerStart implements WatchCallerInterface {
       e.printStackTrace();
     }
   }
-  public void dbInit() throws SQLException {
-    dbUrl = "jdbc"+dbname+"://"+dbAddress;
+  public void dbInit() throws SQLException, ClassNotFoundException {
+    dbUrl = "jdbc:"+dbname+"://"+dbAddress;
     System.out.println("db url :" + dbUrl);
+    Class.forName(driverClassName);
     conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
-    st = conn.createStatement();
+    //st = conn.createStatement();
   }
   public void mqInit(){
     jedis  = new  Jedis(mqIP, mqPort);
@@ -277,20 +298,25 @@ public class EventServerStart implements WatchCallerInterface {
 
   private void stop() {
     try {
+      jedis.close();
+      conn.close();
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
   public static void main(String[] args) throws Exception {
     final EventServerStart simpleServerStart = new EventServerStart();
+    simpleServerStart.cfgInit();
     MicroService myservice = new MicroServiceImpl();
     myservice.init(registerCenterAddress, simpleServerStart);
-    simpleServerStart.cfgInit();
     simpleServerStart.start();
     simpleServerStart.dbInit();
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
+    simpleServerStart.travel();
     TimeUnit.DAYS.sleep(365 * 2000);
   }
 }
