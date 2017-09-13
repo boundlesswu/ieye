@@ -26,18 +26,6 @@ enum VSEventType {
     VSEventTypeMonitorStealMove = 108;
     //区域入侵	event_perimeter_alarm
     VSEventTypeMonitorPerimeterAlarm = 109;
-    //高速车辆停驶
-    VSEventTypeMonitorHighwayVehicleStop = 121;
-    //高速行人
-    VSEventTypeMonitorHighwayPedestrian = 122;
-    //高速车辆逆行
-    VSEventTypeMonitorHighwayVehicleRetrograde = 123;
-    //高速车辆缓行
-    VSEventTypeMonitorHighwayVehicleSlowly = 124;
-    //高速公路路况
-    VSEventTypeMonitorHighwayTrafficCondition= 125;
-    //高速公路车流量
-    VSEventTypeMonitorHighwayVehicleFlowrate = 126;
     //徘徊
     //人员聚集
     //穿越警戒面
@@ -74,6 +62,18 @@ enum VSEventType {
     //漏水报警	event_leakage
     VSEventTypeDigitalIOLeakage = 208;
     VSEventTypeIntelligentChannelAlarm = 3;
+    //高速车辆停驶
+    VSEventTypeIntelligentChannelHighwayVehicleStop = 301;
+    //高速行人
+    VSEventTypeIntelligentChannelHighwayPedestrian = 302;
+    //高速车辆逆行
+    VSEventTypeIntelligentChannelHighwayVehicleRetrograde = 303;
+    //高速车辆缓行
+    VSEventTypeIntelligentChannelHighwayVehicleSlowly = 304;
+    //高速公路路况
+    VSEventTypeIntelligentChannelHighwayTrafficCondition= 305;
+    //高速公路车流量
+    VSEventTypeIntelligentChannelHighwayVehicleFlowrate = 306;
 
     VSEventTypeDeviceAlarm = 4;
     //设备离线	event_dev_offline
@@ -205,7 +205,19 @@ message VSEventLinkActionResponse{
     int32 linkageId=2;
     bool result=3;
 }
+
 message VSEventRequest{
+    int32 eventId=1;
+    //VSEventInfo eventInfo=1;
+    VSEventType evenType = 2;
+
+    string extraContent = 3;
+}
+message VSEventResponse{
+    int32 eventId=1;
+    bool result = 2;
+}
+message VSAlarmRequest{
     //VSEventInfo eventInfo=1;
     VSEventType evenType = 1;
     string deviceNo = 2;
@@ -213,7 +225,7 @@ message VSEventRequest{
     string happenTime = 4;
     string extraContent = 5;
 }
-message VSEventResponse{
+message VSAlarmResponse{
     //int32 eventId=1;
     string deviceNo = 1;
     string resourceUid = 2;
@@ -228,10 +240,16 @@ message VSDistributeConfigResponse{
     bool result=2;
 }
 
+service VSAlarmSentService {
+    //request or response must be message
+    rpc SentAlarm(VSAlarmRequest) returns(VSAlarmResponse);
+}
+
 service VSEventSentService {
     //request or response must be message
     rpc SentEvent(VSEventRequest) returns(VSEventResponse);
 }
+
 
 service VSEventConfigService{
     //Distribute Configuration from web to event service
