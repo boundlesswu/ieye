@@ -147,17 +147,19 @@ public class MicroServiceImpl implements  MicroService {
   @Override
   public long RegisteWithHB(String name, String host, int port, int ttl, String value) throws Exception {
     long leaseID = Registe(name,host,port,ttl,value);
-    getExecutor().scheduleAtFixedRate(()->{
-      Lease.KeepAliveListener kal = leaseClient_.keepAlive(leaseID);
-      try {
-        kal.listen();
-        //System.out.println("keepAlive response  " + kal.listen());
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }finally {
-        getExecutor().shutdown();
-      }
-    },1l,ttl, TimeUnit.SECONDS);
+    Lease.KeepAliveListener kal = leaseClient_.keepAlive(leaseID);
+    kal.listen();
+//    getExecutor().scheduleAtFixedRate(()->{
+//      Lease.KeepAliveListener kal = leaseClient_.keepAlive(leaseID);
+//      try {
+//        kal.listen();
+//        //System.out.println("keepAlive response  " + kal.listen());
+//      } catch (InterruptedException e) {
+//        e.printStackTrace();
+//      }finally {
+//        getExecutor().shutdown();
+//      }
+//    },1l,ttl, TimeUnit.SECONDS);
     return leaseID;
   }
 
