@@ -154,6 +154,8 @@ public class MicroServiceImpl implements  MicroService {
         //System.out.println("keepAlive response  " + kal.listen());
       } catch (InterruptedException e) {
         e.printStackTrace();
+      }finally {
+        getExecutor().shutdown();
       }
     },1l,ttl, TimeUnit.SECONDS);
     return leaseID;
