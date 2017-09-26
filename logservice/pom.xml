@@ -58,6 +58,9 @@
                                 <copy file="${basedir}\src\main\resources\log_service.xml"
                                       tofile="${basedir}/target/log_service/log_service.xml"
                                       overwrite="true"/>
+                                <copy file="${basedir}\version.txt"
+                                      tofile="${basedir}/target/log_service/version.txt"
+                                      overwrite="true"/>
                                 <!--<copy todir="target/log_service" >-->
                                     <!--<fileset dir="target">-->
                                         <!--<include name="log-service-${version}-jar-with-dependencies.jar" tofile="log_service.jar"  />-->
