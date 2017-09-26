@@ -20,6 +20,62 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.vorxsoft.ieye.logservice.SimpleLogServerStart</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>assemble-all</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-lib-src-webapps</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="${basedir}/target/log-service-${version}-jar-with-dependencies.jar"
+                                      tofile="${basedir}/target/log_service/log_service.jar"
+                                      overwrite="true"/>
+                                <copy file="${basedir}\src\main\resources\log_service.xml"
+                                      tofile="${basedir}/target/log_service/log_service.xml"
+                                      overwrite="true"/>
+                                <!--<copy todir="target/log_service" >-->
+                                    <!--<fileset dir="target">-->
+                                        <!--<include name="log-service-${version}-jar-with-dependencies.jar" tofile="log_service.jar"  />-->
+                                        <!--&lt;!&ndash;<copyto name="log_service.jar" />&ndash;&gt;-->
+                                    <!--</fileset>-->
+                                    <!--<fileset dir="src\main\resources">-->
+                                        <!--<include name="log_service.xml" />-->
+                                    <!--</fileset>-->
+                                <!--</copy>-->
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <dependencies>
