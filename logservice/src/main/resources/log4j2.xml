@@ -2,7 +2,7 @@
 
 <configuration debug="off" monitorInterval="1800">
     <Properties>
-        <Property name="log-path">d://logs</Property>
+        <Property name="log-path">c://logs</Property>
     </Properties>
 
     <Appenders>
