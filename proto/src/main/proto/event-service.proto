@@ -62,18 +62,25 @@ enum VSEventType {
     //漏水报警	event_leakage
     VSEventTypeDigitalIOLeakage = 208;
     VSEventTypeIntelligentChannelAlarm = 3;
+//    停驶	event_ia_traffic_stop
+//行人	event_ia_traffic_human
+//逆行	event_ia_traffic_converse
+//路况	event_ia_traffic_condition
+//非法慢速	event_ia_traffic_lowspeed
+//车流量	event_ia_traffic_flowrate
+
     //高速车辆停驶
-    VSEventTypeIntelligentChannelHighwayVehicleStop = 301;
+    VSEventTypeIntelligentChannelTrafficStop = 301;
     //高速行人
-    VSEventTypeIntelligentChannelHighwayPedestrian = 302;
+    VSEventTypeIntelligentChannelTrafficHuman = 302;
     //高速车辆逆行
-    VSEventTypeIntelligentChannelHighwayVehicleRetrograde = 303;
+    VSEventTypeIntelligentChannelTrafficConverse = 303;
     //高速车辆缓行
-    VSEventTypeIntelligentChannelHighwayVehicleSlowly = 304;
+    VSEventTypeIntelligentChannelTrafficLowspeed= 304;
     //高速公路路况
-    VSEventTypeIntelligentChannelHighwayTrafficCondition= 305;
+    VSEventTypeIntelligentChannelTrafficCondition= 305;
     //高速公路车流量
-    VSEventTypeIntelligentChannelHighwayVehicleFlowrate = 306;
+    VSEventTypeIntelligentChannelTrafficFlowrate = 306;
 
     VSEventTypeDeviceAlarm = 4;
     //设备离线	event_dev_offline
@@ -231,15 +238,27 @@ message VSAlarmResponse{
     string resourceUid = 2;
     bool result = 3;
 }
-message VSDistributeConfigRequest{
-    VSEventInfo eventinfo=1;
-    VSEventLinkageInfo   eventLinkageInfo=2;
+//message VSDistributeConfigRequest{
+//    VSEventInfo eventinfo=1;
+//    VSEventLinkageInfo   eventLinkageInfo=2;
+//}
+//message VSDistributeConfigResponse{
+//    int32 eventId=1;
+//    bool result=2;
+//}
+enum VSConfigType{
+    VSConfigTypeEvent = 0;
+    VSConfigTypeLinkAge = 1;
+    VSConfigTypeOther = 2;
 }
-message VSDistributeConfigResponse{
-    int32 eventId=1;
-    bool result=2;
+message DistributeConfigRequest{
+    int32  distributeId = 1;
+    VSConfigType configType = 2;
 }
-
+message DistributeConfigResponse{
+    int32  distributeId = 1;
+    bool result = 2;
+}
 service VSAlarmSentService {
     //request or response must be message
     rpc SentAlarm(VSAlarmRequest) returns(VSAlarmResponse);
@@ -252,8 +271,7 @@ service VSEventSentService {
 
 
 service VSEventConfigService{
-    //Distribute Configuration from web to event service
-    rpc DistributeConfig(VSDistributeConfigRequest)returns(VSDistributeConfigResponse);
+    rpc DistributeConfig(DistributeConfigRequest)returns(DistributeConfigResponse);
 }
 
 service VSEventLinkactionService{

@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_outer_classname = "IA";
+
+package com.vorxsoft.ieye.proto;
+
+message IAAGInfo{
+    string name = 1;
+    string ipEx = 2;
+    string ipIn = 3;
+    int32 port = 4;
+}
+
+message IAUInfo{
+    string name = 1;
+    string protocolType = 2;
+    string changNum = 3;
+    string ip =  4;
+    int32 port = 5;
+}
+
+message QueryIAAGRequest{
+    string ip =  1;
+    int32 port = 2;
+}
+
+message QueryIAAGResponse{
+    IAAGInfo iaagInfo = 1;
+}
+
+message QueryIAUListRequest{
+    string ip =  1;
+    int32 port = 2;
+}
+message QueryIAUListResponse{
+    repeated IAUInfo iauList = 1;
+}
+
+
+
+service IAQueryService {
+     //request or response must be message
+     rpc QueryIAAG(QueryIAAGRequest) returns(QueryIAAGResponse);
+     rpc QueryIAUList(QueryIAUListRequest) returns(QueryIAUListResponse);
+}
+enum StateType{
+    IAStateTypeIAAG = 0;
+    IAStateTypeIAU = 1;
+}
+message SentState{
+    StateType type = 1;
+    int32 id = 2;
+    int32 maxCnt = 3;
+    int32 curCnt = 4;
+}
+
+message SentStateRequest{
+    repeated SentState stateList = 1;
+}
+message SentStateResponse{
+    StateType type = 1;
+    int32 id = 2;
+    bool result = 3;
+}
+service UpdateStateService{
+    rpc SentState(SentStateRequest) returns(SentStateResponse);
+}
+
+enum IACMDType{
+    IACMDTypeStart = 0;
+    IACMDTypeStop = 1;
+}
+
+message SentIACMDRequest {
+    int32 cmdId = 1;
+    repeated int32 rId = 2;
+    IACMDType cmdType = 3;
+}
+message SentIACMDResponse{
+    int32 cmdId = 1;
+    bool result = 2;
+}
+service IACMDService{
+    rpc SentIACMD(SentIACMDRequest) returns(SentIACMDResponse);
+}
+message IAU4Res{
+        int32 rId = 1;
+        int32 IAUId = 2;
+        string ip = 3;
+        string port = 4;
+        string rPort = 5;
+}
+
+message SentIACMDReslutRequest {
+    int32 cmdId = 1;
+    repeated IAU4Res iauRes = 2;
+}
+message SentIACMDReslutResponse{
+    int32 cmdId = 1;
+    bool result = 2 ;
+}
+
+service EXEIACMDResultService{
+    rpc SentIACMDReslut(SentIACMDReslutRequest) returns(SentIACMDReslutResponse);
+}
