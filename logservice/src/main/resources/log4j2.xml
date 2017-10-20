@@ -18,6 +18,12 @@
             </Filters>
             <PatternLayout pattern="%msg%xEx%n"/>
             <SizeBasedTriggeringPolicy size="5MB"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log-path}/app" maxDepth="2">
+                    <IfFileName glob="*/*.log" />
+                    <IfLastModified age="300s" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         //info
