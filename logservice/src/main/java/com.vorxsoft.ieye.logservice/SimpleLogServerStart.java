@@ -136,7 +136,9 @@ public class SimpleLogServerStart implements WatchCallerInterface {
       MicroService myservice = new MicroServiceImpl();
       myservice.init(registerCenterAddress, simpleServerStart);
       simpleServerStart.start();
-      myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
+      long ret = myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
+      myservice.SetWatcher(serviceName,true);
+      System.out.println("leasid is " + ret);
         TimeUnit.DAYS.sleep(365*2000);
         SimpleLogServer.getLogger().exit();
     }
