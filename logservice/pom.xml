@@ -61,6 +61,9 @@
                                 <copy file="${basedir}\version.txt"
                                       tofile="${basedir}/target/log_service/version.txt"
                                       overwrite="true"/>
+                                <copy file="${basedir}\startup.bat"
+                                      tofile="${basedir}/target/log_service/startup.bat"
+                                      overwrite="true"/>
                                 <!--<copy todir="target/log_service" >-->
                                     <!--<fileset dir="target">-->
                                         <!--<include name="log-service-${version}-jar-with-dependencies.jar" tofile="log_service.jar"  />-->
