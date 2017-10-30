@@ -1,8 +1,7 @@
 package com.vorxsoft.ieye.microservice.eventservice;
 
-import com.vorxsoft.ieye.proto.VSEventRequest;
-import com.vorxsoft.ieye.proto.VSEventResponse;
-import com.vorxsoft.ieye.proto.VSEventServiceGrpc;
+import com.vorxsoft.ieye.proto.*;
+//import com.vorxsoft.ieye.proto.VSEventServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
@@ -51,11 +50,11 @@ public class SimpleEventClientStart {
         SimpleEventClientStart simpleEventClient = new SimpleEventClientStart();
         simpleEventClient.createChannel();
 
-        VSEventServiceGrpc.VSEventServiceBlockingStub stub = VSEventServiceGrpc.newBlockingStub(simpleEventClient.managedChannel);
+        VSAlarmSentServiceGrpc.VSAlarmSentServiceBlockingStub stub = VSAlarmSentServiceGrpc.newBlockingStub(simpleEventClient.managedChannel);
 
 
         do{
-            VSEventResponse reply =  stub.sentEvent(VSEventRequest.newBuilder().
+            VSAlarmResponse reply =  stub.sentAlarm(VSAlarmRequest.newBuilder().
                                                                    setDeviceNo(randomString()).
                                                                    setEvenType(VSEventTypeDigitalIOCommon).
                                                                    setResourceUid(randomString()).
